@@ -1,0 +1,29 @@
+CREATE DATABASE IF NOT EXISTS library_management;
+USE library_management;
+
+CREATE TABLE IF NOT EXISTS books (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(150) NOT NULL,
+  author VARCHAR(120) NOT NULL,
+  genre VARCHAR(80),
+  isbn VARCHAR(30),
+  quantity INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(120) NOT NULL,
+  membership_id VARCHAR(50) NOT NULL UNIQUE,
+  role ENUM('Admin', 'Librarian', 'Member') NOT NULL DEFAULT 'Member'
+);
+
+CREATE TABLE IF NOT EXISTS transactions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  book_id INT NOT NULL,
+  user_id INT NULL,
+  type ENUM('ADD', 'BORROW') NOT NULL,
+  quantity INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (book_id) REFERENCES books(id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
